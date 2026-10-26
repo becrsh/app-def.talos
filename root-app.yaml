@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/becresh/app-def.talos
+    repoURL: https://github.com/becrsh/app-def.talos
     targetRevision: main
     path: apps
   destination:

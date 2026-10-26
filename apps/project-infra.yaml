@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"   # created before the Applications that use it
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Cluster infrastructure (networking, certificates, secrets, storage, GitOps)
+  sourceRepos:
+    - https://github.com/becrsh/app-def.talos
+    - https://charts.jetstack.io
+    - cr.agentgateway.dev/charts
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: cert-manager
+    - server: https://kubernetes.default.svc
+      namespace: agentgateway-system
+  # Infra charts install CRDs, ClusterRoles, webhooks, ClusterIssuers and namespaces
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

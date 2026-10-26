@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: agentgateway-crds
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infra
+  source:
+    repoURL: cr.agentgateway.dev/charts
+    chart: agentgateway-crds
+    targetRevision: v1.6.0
+    helm:
+      releaseName: agentgateway-crds
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: agentgateway-system
+  syncPolicy:
+    automated:
+      prune: false          # never delete the CRDs (and with them every Gateway resource) through a prune
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels:
+        secrets.bcc.test/tier: infra
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
