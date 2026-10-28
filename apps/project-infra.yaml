@@ -10,7 +10,7 @@ metadata:
 spec:
   description: Cluster infrastructure (networking, certificates, secrets, storage)
   sourceRepos:
-    - https://github.com/<owner>/<repo>
+    - https://github.com/becrsh/app-def.talos
     - https://charts.jetstack.io
     - https://charts.external-secrets.io
     - cr.agentgateway.dev/charts
