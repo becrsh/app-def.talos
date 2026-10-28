@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: proxmox-csi
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infra
+  source:
+    repoURL: ghcr.io/sergelogvinov/charts
+    chart: proxmox-csi-plugin
+    targetRevision: 0.5.13
+    helm:
+      releaseName: proxmox-csi-plugin
+      valuesObject:
+        existingConfigSecret: proxmox-csi-config
+        existingConfigSecretKey: config.yaml
+        storageClass:
+          - name: proxmox-lvm
+            storage: local-lvm
+            reclaimPolicy: Delete
+            fstype: ext4
+            ssd: true
+            annotations:
+              storageclass.kubernetes.io/is-default-class: "true"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: csi-proxmox
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        secrets.bcc.test/tier: infra
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
