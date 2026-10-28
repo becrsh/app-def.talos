@@ -1,13 +1,13 @@
-# Helm OCI registry for the agentgateway charts. Public, no credentials.
 apiVersion: v1
 kind: Secret
 metadata:
-  name: repo-agentgateway-oci
+  name: repo-proxmox-csi-oci
   namespace: argocd
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  name: agentgateway
+  name: proxmox-csi
   type: helm
-  url: cr.agentgateway.dev/charts
+  url: ghcr.io/sergelogvinov/charts
   enableOCI: "true"
+  project: infra

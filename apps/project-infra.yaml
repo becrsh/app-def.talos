@@ -4,21 +4,26 @@ metadata:
   name: infra
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"   # created before the Applications that use it
+    argocd.argoproj.io/sync-wave: "-1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  description: Cluster infrastructure (networking, certificates, secrets, storage, GitOps)
+  description: Cluster infrastructure (networking, certificates, secrets, storage)
   sourceRepos:
-    - https://github.com/becrsh/app-def.talos
+    - https://github.com/<owner>/<repo>
     - https://charts.jetstack.io
+    - https://charts.external-secrets.io
     - cr.agentgateway.dev/charts
+    - ghcr.io/sergelogvinov/charts
   destinations:
     - server: https://kubernetes.default.svc
       namespace: cert-manager
     - server: https://kubernetes.default.svc
       namespace: agentgateway-system
-  # Infra charts install CRDs, ClusterRoles, webhooks, ClusterIssuers and namespaces
+    - server: https://kubernetes.default.svc
+      namespace: external-secrets
+    - server: https://kubernetes.default.svc
+      namespace: csi-proxmox
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
